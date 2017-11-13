@@ -1,38 +1,109 @@
-Role Name
+vc_vmcreate
 =========
 
-A brief description of the role goes here.
+This role allows you deploy new VM or some VMs in VMWare Vcenter.
+Tested with 5.5 and 6.0 - works perfect.
+
+You can easly deploy lot's of virtual machines from template.
+Also you can combine this role with your own roles for some installation on freshly created VMs.
 
 Requirements
 ------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Add this later
 
 Role Variables
 --------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Add this later, or.... doesnt' really matter
 
 Dependencies
 ------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+There are no deps from Ansible Galaxy
 
 Example Playbook
 ----------------
+Here is the example of using:
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Main file(playbook.yaml):
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+---
+- hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vc.yml    # file with sensitive data from vcenter
+    - testvm.yml
+  roles:
+    - vmcreate
+...
+```
 
+File with VM's info (testvm.yaml):
+```yaml
+---
+# Name of the VM in VCenter
+vm_name: "testvm20170910"
+
+# Power it on after preparation
+vm_state: "poweredon"
+
+# Add annotation
+vm_notes: "TestVM"
+
+# Set 2 disks to VM
+vm_disk: 
+  disk1:
+    size_gb: 10
+    type: thin
+    datastore: storage01
+  disk2:
+    size_gb: 20
+    type: thin
+    datastore: storage02
+vm_nic:
+  nic1:
+    type: vmxnet3
+    network: network1
+    network_type: standard
+  nic2:
+    type: vmxnet3
+    network: network2
+    network_type: standard
+vm_mem: 2048
+vm_cpu: 2
+
+# OSid
+vm_osid: "centos64Guest"
+
+# Name of you DC
+datacenter: "MYDC"
+
+# Certaion ESXI where VM will be hosted after powering on
+target_esxi: "esxi01"
+
+# Set that it should be cloned from gold-image
+from_template: yes
+
+# Name of the Template
+template_src: centosTemplate
+...
+```
+
+File with sensitive data to get access to VCenter(vc.yaml):
+Please be aware that it's better to keep such data with Ansible Vault
+```yaml
+---
+vcenter_hostname: "vcenter01.net.local"
+vcenter_username: "ansible@net.local"
+vcenter_password: "somepassword"
+...
+```
 License
 -------
 
-BSD
+GPL V3
+
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Tenhi(adm@tenhi.ru_
