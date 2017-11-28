@@ -1,2 +1,6 @@
 ---
-# defaults file for vc_vmcreate
+validate_certs: no
+vcpu.hotadd: yes
+mem.hotadd:  yes
+scsi: paravirtual
+...

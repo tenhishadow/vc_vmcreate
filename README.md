@@ -9,7 +9,7 @@ Also you can combine this role with your own roles for some installation on fres
 
 Requirements
 ------------
-Add this later
+
 
 Role Variables
 --------------
@@ -40,51 +40,43 @@ Main file(playbook.yaml):
 File with VM's info (testvm.yaml):
 ```yaml
 ---
-# Name of the VM in VCenter
+
 vm_name: "testvm20170910"
-
-# Power it on after preparation
-vm_state: "poweredon"
-
-# Add annotation
-vm_notes: "TestVM"
-
-# Set 2 disks to VM
-vm_disk: 
+vm_state: "powered_on"
+vm_notes: "VM_for_testing_purposes"
+vm_disk:
   disk1:
-    size_gb: 10
-    type: thin
-    datastore: storage01
+    size_gb: "10"
+    type: "thin"
+    datastore: "stor1.esxi.nl.data01.vv"
   disk2:
-    size_gb: 20
-    type: thin
-    datastore: storage02
+    size_gb: "5"
+    type: "thin"
+    datastore: "stor2.esxi.nl.data01.vv"
 vm_nic:
   nic1:
-    type: vmxnet3
-    network: network1
-    network_type: standard
+    type: "vmxnet3"
+    network: "vDS01-VLANXXX-Test"
+    network_type: "standard"
+    ip: "192.168.1.100"
+    netmask: "255.255.255.0"
+    gateway: "192.168.1.1"
+    domain: "domain.lan"
+    dns_servers:
+      - "192.168.1.1"
+      - "192.168.1.2"
   nic2:
-    type: vmxnet3
-    network: network2
-    network_type: standard
-vm_mem: 2048
-vm_cpu: 2
-
-# OSid
+    type: "vmxnet3"
+    network: "vDS01-VLANXXX-Test"
+    network_type: "standard"
+vm_mem: "512"
+vm_cpu: "1"
 vm_osid: "centos64Guest"
+datacenter: "BMH-DC"
+target_esxi: "domain-esxi05.domain.lan"
+from_template: "yes"
+template_src: "testtemplate"
 
-# Name of you DC
-datacenter: "MYDC"
-
-# Certaion ESXI where VM will be hosted after powering on
-target_esxi: "esxi01"
-
-# Set that it should be cloned from gold-image
-from_template: yes
-
-# Name of the Template
-template_src: centosTemplate
 ...
 ```
 
@@ -92,9 +84,9 @@ File with sensitive data to get access to VCenter(vc.yaml):
 Please be aware that it's better to keep such data with Ansible Vault
 ```yaml
 ---
-vcenter_hostname: "vcenter01.net.local"
-vcenter_username: "ansible@net.local"
-vcenter_password: "somepassword"
+vcenter_hostname: "vcenter01.domain.lan"
+vcenter_username: "ansible@domainlan"
+vcenter_password: "password"
 ...
 ```
 License
@@ -106,4 +98,4 @@ GPL V3
 Author Information
 ------------------
 
-Tenhi(adm@tenhi.ru_
+Tenhi(adm@tenhi.ru)

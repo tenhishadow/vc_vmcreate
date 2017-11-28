@@ -1,13 +1,15 @@
 ---
 - vsphere_guest:
+    validate_certs: "{{ validate_certs }}"
     vcenter_hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     guest: "{{ vm_name }}"
-    state: "{{ vm_state }}"
+    from_template: "{{ from_template }}"
+    template_src: "{{ template_src }}"
     vm_extra_config:
-      vcpu.hotadd: yes
-      mem.hotadd:  yes
+      vcpu.hotadd: "{{ vcpu.hotadd }}"
+      mem.hotadd:  "{{ mem.hotadd }}"
       notes: "{{ vm_notes }}"
     vm_disk: "{{ vm_disk }}"
     vm_nic: "{{ vm_nic }}"
@@ -15,9 +17,8 @@
       memory_mb: "{{ vm_mem }}"
       num_cpus: "{{ vm_cpu }}"
       osid: "{{ vm_osid }}"
-      scsi: paravirtual
+      scsi: "{{ scsi }}"
     esxi:
       datacenter: "{{ datacenter }}"
       hostname: "{{ target_esxi }}"
-  register: deploy
-  delegate_to: localhost
+...
